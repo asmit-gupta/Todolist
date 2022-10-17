@@ -14,6 +14,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final todosList = ToDo.todoList();
+  List<ToDo> _foundToDo = [];
+  final _todoController = TextEditingController();
+
+  @override
+  void initState() {
+    _foundToDo = todosList;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +41,7 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextField(
+                    onChanged: (value) => _runFilter(value),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(0),
                       prefixIcon: Icon(
@@ -68,7 +77,7 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                       ),
-                      for (ToDo todoo in todosList)
+                      for (ToDo todoo in _foundToDo.reversed)
                         ToDoItem(
                           todo: todoo,
                           onToDoChanged: _handleToDoChange,
@@ -105,6 +114,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextField(
+                      controller: _todoController,
                       decoration: InputDecoration(
                         hintText: 'Add a new todo list',
                         border: InputBorder.none,
@@ -118,7 +128,9 @@ class _HomeState extends State<Home> {
                     right: 20,
                   ),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _addToDoItem(_todoController.text);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: tdBlue,
                       minimumSize: Size(60, 60),
@@ -149,6 +161,32 @@ class _HomeState extends State<Home> {
   void _deleteToDoItem(String id) {
     setState(() {
       todosList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addToDoItem(String toDo) {
+    setState(() {
+      todosList.add(ToDo(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        todotext: toDo,
+      ));
+    });
+    _todoController.clear();
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<ToDo> results = [];
+    if (enteredKeyword.isEmpty) {
+      results = todosList;
+    } else {
+      results = todosList
+          .where((item) => item.todotext!
+              .toLowerCase()
+              .contains(enteredKeyword.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _foundToDo = results;
     });
   }
 
