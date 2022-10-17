@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
                           bottom: 20,
                         ),
                         child: Text(
-                          'All ToDos',
+                          'All ToDos here',
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w500,
@@ -71,6 +71,8 @@ class _HomeState extends State<Home> {
                       for (ToDo todoo in todosList)
                         ToDoItem(
                           todo: todoo,
+                          onToDoChanged: _handleToDoChange,
+                          onDeleteItem: _deleteToDoItem,
                         ),
                     ],
                   ),
@@ -136,6 +138,18 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  void _handleToDoChange(ToDo todo) {
+    setState(() {
+      todo.isDone = !todo.isDone;
+    });
+  }
+
+  void _deleteToDoItem(String id) {
+    setState(() {
+      todosList.removeWhere((item) => item.id == id);
+    });
   }
 
   AppBar _buildAppBar() {
