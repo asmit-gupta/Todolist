@@ -197,17 +197,14 @@ class _HomeState extends State<Home> {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(
-            Icons.menu,
-            color: tdBlack,
-            size: 30,
-          ),
           Container(
-            height: 40,
-            width: 40,
+            height: 80,
+            width: 60,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: Image.asset('assets/image/avatar.jpg'),
+              child: Image.asset(
+                'assets/image/todologo.jpg',
+              ),
             ),
           )
         ],
